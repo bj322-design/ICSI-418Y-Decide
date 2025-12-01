@@ -10,6 +10,7 @@ import CreateProject from './CreateProject';
 import Home from './Home';
 import ViewProjects from './ViewProjects';
 import ViewTeams from './ViewTeams';
+import HostSignup from "./HostRegistration";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -18,6 +19,7 @@ root.render(
       <Routes>
         <Route path="/" element={<Login />}></Route>
         <Route path="/Signup" element={<Signup />}></Route>
+        <Route path="/HostSignup" element={<HostSignup />}></Route>
         <Route path="/CreateProject" element={<CreateProject/>}></Route>
         <Route path="/Home" element={<Home />}></Route>
         <Route path="/ViewProjects" element={<ViewProjects />}></Route>

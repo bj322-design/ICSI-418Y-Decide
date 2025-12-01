@@ -50,6 +50,10 @@ const Login = () => {
             <div className="signup-link">
                 Don't have an account? <Link to="/Signup">Sign up</Link>
             </div>
+
+            <div className="hostreg-link">
+                Looking to host an event? <Link to="/HostSignup">Register</Link>
+            </div>
     
     
             <style>{`
@@ -151,6 +155,24 @@ const Login = () => {
                 }
 
                 .signup-link a:hover {
+                    text-decoration: underline;
+                }
+                
+                /* Host Signup link text */
+                .hostreg-link {
+                    margin-top: 0.25rem;
+                    font-size: 0.9rem;
+                    color: #555;
+                }
+
+                .hostreg-link a {
+                    color: #007bff;
+                    text-decoration: none;
+                    font-weight: 600;
+                    transition: color 0.3s ease;
+                }
+
+                .hostreg-link a:hover {
                     text-decoration: underline;
                 }
             `}</style>

@@ -2,17 +2,16 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const User = require('./UserSchema')
+const Host = require('./HostSchema')
 const Project = require('./Projects.js')
 const Team = require('./TeamName')
 
 app.use(express.json());
 app.use(cors())
-app.listen(9000, () => {
-    console.log(`Server Started at ${9000}`)
-})
 
 const mongoose = require('mongoose');
-const mongoString = "mongodb+srv://b322:1968cobra@cluster0.yhsbzdf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const mongoString = "mongodb+srv://slindemann_db_user:juxPjCtUM5vLGjD5@icsi418y.hyujft7.mongodb.net/icsi418y";
+//const mongoString = "mongodb+srv://b322:1968cobra@cluster0.yhsbzdf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 mongoose.connect(mongoString);
 
 const database = mongoose.connection
@@ -20,14 +19,46 @@ const database = mongoose.connection
 database.on('error', (error) => console.log(error))
 database.once('connected', () => console.log('Databased Connected'))
 
+//HOST _________________________________________________________________________________________________
+app.post('/createHost', async (req, res) => {
+    console.log(`SERVER: CREATE HOST REQ BODY: ${req.body.username} ${req.body.email} ${req.body.phone} ${req.body.org_name}`)
+    const un = req.body.username;
+
+    try {
+        const resultHost = await Host.exists({ username: un });
+        const resultUser = await User.exists({ username: un });
+
+        if(resultHost === null && resultUser === null)
+        {
+            const host = new Host(req.body);
+            await host.save();
+            console.log("Host created successfully!")
+            res.send(host);
+        }
+
+        else
+        {
+            console.log("Username already exists");
+            res.status(500).send("Username already exists");
+        }
+    }
+
+    catch (error)
+    {
+        console.error("SERVER ERROR in createHost:", error);
+        res.status(500).send(error);
+    }
+})
 
 //USERS ________________________________________________________________________________________________
 app.post('/createUser', async (req, res) => {
     console.log(`SERVER: CREATE USER REQ BODY: ${req.body.username} ${req.body.f_name} ${req.body.l_name}`)
     const un = req.body.username;
     try {
-        const result = await User.exists({ username: un });
-        if (result === null) {
+        const resultUser = await User.exists({ username: un });
+        const resultHost = await Host.exists({ username: un });
+
+        if (resultUser === null && resultHost === null) {
             const user = new User(req.body);
             await user.save();
             console.log(`User created! ${user}`);
