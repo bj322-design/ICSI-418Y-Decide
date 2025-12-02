@@ -92,10 +92,9 @@ const Login = () => {
                 <div className="signup-link">
                     Don't have an account? <Link to="/signup">Sign up</Link>
                 </div>
-            </div>
-
-            <div className="hostreg-link">
-                Looking to host an event? <Link to="/HostSignup">Register</Link>
+                <div className="hostreg-link">
+                    Looking to host an event? <Link to="/HostSignup">Register</Link>
+                </div>
             </div>
     
     
