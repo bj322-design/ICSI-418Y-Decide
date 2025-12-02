@@ -129,7 +129,6 @@ const Home = () => {
                 <div className="nav-dock">
                     <Link to="/SocialPlanner" className="dock-link">Plan</Link>
                     <Link to="/Events" className="dock-link">My Events</Link>
-                    <Link to="/Chat" className="dock-link">Chat</Link>
                     <Link to="/Profile" className="dock-link">Profile</Link>
                     <Link to="/Settings" className="dock-link">Settings</Link>
                 </div>
