@@ -9,6 +9,7 @@ import ViewEvents from "./ViewEvents";
 import CreateEvent from "./CreateEvent";
 import CreateProject from "./CreateProject";
 import SocialPlanner from "./SocialPlanner";
+import HostSignup from "./HostRegistration";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/ViewEvents" element={<ViewEvents />}></Route>
           <Route path="/CreateProject" element={<CreateProject />}></Route>
           <Route path="/SocialPlanner" element={<SocialPlanner />}></Route>
+          <Route path="/HostSignup" element={<HostSignup />}></Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
