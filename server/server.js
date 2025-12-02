@@ -300,19 +300,37 @@ app.post('/startGroupSession', async (req, res) => {
 });
 
 // check status
-app.get('/sessionStatus/:sessionCode', async (req, res) => {
+app.get('/sessionDetails/:sessionCode', async (req, res) => {
     try {
         const session = await Session.findOne({ session_code: req.params.sessionCode });
         if (!session) return res.status(404).send("Session not found");
 
+        // headcount
         const uniqueVoters = [...new Set(session.votes.map(v => v.user_id))];
 
         res.send({
             session_code: session.session_code,
-            headcount: uniqueVoters.length,
-            total_votes: session.votes.length,
-            status: session.status
+            headcount: uniqueVoters.length, 
+            chat_log: session.chat_log // chat history
         });
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+// chat message
+app.post('/sendMessage', async (req, res) => {
+    try {
+        const { session_code, sender, message } = req.body;
+        const session = await Session.findOne({ session_code });
+        
+        if (session) {
+            session.chat_log.push({ sender, message });
+            await session.save();
+            res.send({ success: true });
+        } else {
+            res.status(404).send("Session not found");
+        }
     } catch (error) {
         res.status(500).send(error);
     }
