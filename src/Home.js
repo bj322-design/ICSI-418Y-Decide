@@ -107,15 +107,11 @@ const Home = () => {
 
                 {/* Navigation Buttons */}
                 <div className="nav-dock">
-                    {/* 👇 NEW: This link connects to your Social Planner feature */}
-                    <Link to="/SocialPlanner" className="dock-link" style={{ color: '#007bff', fontWeight: '800' }}>
-                        + Plan
-                    </Link>
-
-                    <Link to="/profile" className="dock-link">Profile</Link>
-                    <Link to="/events" className="dock-link">Events</Link>
-                    <Link to="/chat" className="dock-link">Chat</Link>
-                    <Link to="/settings" className="dock-link">Settings</Link>
+                    <Link to="/SocialPlanner" className="dock-link">Plan</Link>
+                    <Link to="/Profile" className="dock-link">Profile</Link>
+                    <Link to="/Events" className="dock-link">Events</Link>
+                    <Link to="/Chat" className="dock-link">Chat</Link>
+                    <Link to="/Settings" className="dock-link">Settings</Link>
                 </div>
             </div>
 
@@ -144,7 +140,7 @@ const Home = () => {
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
-                    min-height: 900px;
+                    min-height: 850px;
                 }
                 
                 .app-header h1 {
