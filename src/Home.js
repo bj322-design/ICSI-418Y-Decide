@@ -144,7 +144,7 @@ const Home = () => {
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
-                    min-height: 800px; /* Adjusted height for better fit */
+                    min-height: 900px;
                 }
                 
                 .app-header h1 {
