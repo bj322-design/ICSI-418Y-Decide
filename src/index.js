@@ -14,6 +14,7 @@ import HostSignup from "./HostRegistration";
 import CreateEvent from "./CreateEvent";
 import HostHome from "./HostHome";
 import ViewEvents from "./ViewEvents";
+import SocialPlanner from './SocialPlanner';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -30,6 +31,7 @@ root.render(
         <Route path="/ViewTeams" element={<ViewTeams />}></Route>
         <Route path="/CreateEvent" element={<CreateEvent />}></Route>
         <Route path="/ViewEvents" element={<ViewEvents />}></Route>
+        <Route path="/SocialPlanner" element={<SocialPlanner />}></Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
