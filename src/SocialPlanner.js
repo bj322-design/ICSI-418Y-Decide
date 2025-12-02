@@ -3,17 +3,12 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 const SocialPlanner = () => {
-    // inputs
     const [location, setLocation] = useState('');
     const [activityType, setActivityType] = useState('');
     const [loading, setLoading] = useState(false);
-    
-    // session data
     const [createdSession, setCreatedSession] = useState(null);
     const [eventCount, setEventCount] = useState(0);
     const [error, setError] = useState(null);
-
-    // headcount + chat
     const [headcount, setHeadcount] = useState(0);
     const [chatLog, setChatLog] = useState([]);
     const [chatMessage, setChatMessage] = useState("");
@@ -32,157 +27,136 @@ const SocialPlanner = () => {
                     })
                     .catch(err => console.error("Polling error", err));
             };
-
             fetchUpdates();
             interval = setInterval(fetchUpdates, 3000);
         }
         return () => clearInterval(interval); 
     }, [createdSession]);
 
-
     const handleCreateSession = (e) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
-
         axios.post('http://localhost:9000/startGroupSession', {
-            host_id: hostId,
-            location: location,
-            activity_type: activityType
-        })
-        .then((res) => {
+            host_id: hostId, location, activity_type: activityType
+        }).then((res) => {
             setCreatedSession(res.data.session);
             setEventCount(res.data.event_count);
             setLoading(false);
-        })
-        .catch((err) => {
+        }).catch((err) => {
             setLoading(false);
-            if (err.response && err.response.status === 404) {
-                setError("No events found. Try a different search.");
-            } else {
-                setError("Server error.");
-            }
+            if (err.response && err.response.status === 404) setError("No events found.");
+            else setError("Server error.");
         });
     };
 
     const handleSendMessage = (e) => {
         e.preventDefault();
         if(!chatMessage.trim()) return;
-
         axios.post('http://localhost:9000/sendMessage', {
             session_code: createdSession.session_code,
             sender: hostName,
             message: chatMessage
-        })
-        .then(() => {
+        }).then(() => {
             setChatMessage("");
             setChatLog([...chatLog, { sender: hostName, message: chatMessage }]);
-        })
-        .catch(err => console.error("Chat error", err));
+        }).catch(err => console.error("Chat error", err));
     };
 
     return (
         <div className="page-wrapper">
-            <div className="planner-container">
-                <h1>Social Planner Dashboard</h1>
+            {/* 'home-container' */}
+            <div className="home-container" style={{ minHeight: 'auto', display: 'block' }}>
+                <div className="app-header">
+                    <h1>Group Plan</h1>
+                </div>
 
                 {!createdSession ? (
-                    <>
-                        <p className="subtitle">Start a group decision session.</p>
+                    <div className="planner-content">
+                        <p className="subtitle">Start a new session.</p>
                         <form onSubmit={handleCreateSession} className="planner-form">
                             {error && <div className="error-message">{error}</div>}
                             <div className="input-group">
-                                <label>Where is the group going?</label>
+                                <label>Location</label>
                                 <input type="text" placeholder="e.g. Albany" value={location} onChange={(e) => setLocation(e.target.value)} required />
                             </div>
                             <div className="input-group">
-                                <label>Activity Vibe?</label>
+                                <label>Activity</label>
                                 <input type="text" placeholder="e.g. Food" value={activityType} onChange={(e) => setActivityType(e.target.value)} />
                             </div>
-                            <button type="submit" disabled={loading}>{loading ? "Searching..." : "Create Group Session"}</button>
+                            <button type="submit" disabled={loading}>{loading ? "Searching..." : "Create Session"}</button>
                         </form>
-                    </>
+                        <br/>
+                        <Link to="/Home" className="back-link">Cancel</Link>
+                    </div>
                 ) : (
-                    <div className="dashboard-grid">
-                        {/* LEFT COLUMN: info + stats */}
-                        <div className="info-column">
-                            <div className="invite-box">
-                                <span className="invite-label">Invite Code:</span>
-                                <div className="code-display">{createdSession.session_code}</div>
-                            </div>
-                            
-                            <div className="stats-card">
-                                <h3>📊 Live Status</h3>
-                                <p><strong>{headcount}</strong> Friends Joined</p>
-                                <p><strong>{eventCount}</strong> Events Found</p>
-                            </div>
-
-                            <button onClick={() => setCreatedSession(null)} className="btn-secondary">End Session</button>
-                            <Link to="/Home" className="back-link">Back to Home</Link>
+                    <div className="session-active-view">
+                        <div className="invite-section">
+                            <span className="invite-label">Join Code:</span>
+                            <div className="code-display">{createdSession.session_code}</div>
+                        </div>
+                        
+                        <div className="stats-row">
+                            <span>👥 {headcount} Joined</span>
+                            <span>🎉 {eventCount} Options</span>
                         </div>
 
-                        {/* RIGHT COLUMN: Chat */}
-                        <div className="chat-column">
-                            <h3>Group Chat</h3>
+                        <div className="chat-section">
                             <div className="chat-window">
-                                {chatLog.length === 0 ? (
-                                    <p className="empty-chat">No messages yet.</p>
-                                ) : (
-                                    chatLog.map((msg, index) => (
-                                        <div key={index} className={`chat-bubble ${msg.sender === hostName ? 'mine' : 'theirs'}`}>
+                                {chatLog.length === 0 ? <p className="empty-chat">Start the discussion...</p> : 
+                                    chatLog.map((msg, i) => (
+                                        <div key={i} className={`chat-bubble ${msg.sender === hostName ? 'mine' : 'theirs'}`}>
                                             <strong>{msg.sender}: </strong> {msg.message}
                                         </div>
                                     ))
-                                )}
+                                }
                             </div>
-                            <form onSubmit={handleSendMessage} className="chat-input-area">
-                                <input 
-                                    type="text" 
-                                    placeholder="Type a message..." 
-                                    value={chatMessage}
-                                    onChange={(e) => setChatMessage(e.target.value)}
-                                />
+                            <form onSubmit={handleSendMessage} className="chat-input">
+                                <input type="text" placeholder="Message..." value={chatMessage} onChange={(e) => setChatMessage(e.target.value)} />
                                 <button type="submit">Send</button>
                             </form>
                         </div>
+
+                        <button onClick={() => setCreatedSession(null)} className="btn-secondary">End Session</button>
                     </div>
                 )}
             </div>
 
             <style>{`
+                /* Reusing teammate's core classes */
                 .page-wrapper { font-family: 'Inter', sans-serif; background-color: #f0f2f5; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
-                .planner-container { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 100%; max-width: 800px; text-align: center; }
-                
-                /* Grid for Dashboard */
-                .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; }
-                @media (max-width: 600px) { .dashboard-grid { grid-template-columns: 1fr; } }
-
-                .invite-box { background: #e8f0fe; border: 2px dashed #007bff; padding: 1rem; border-radius: 10px; text-align: center; margin-bottom: 20px; }
-                .code-display { font-size: 2rem; font-weight: 800; letter-spacing: 3px; color: #333; }
-                
-                .stats-card { background: #f9f9f9; padding: 1rem; border-radius: 8px; margin-bottom: 20px; }
-                .stats-card p { margin: 5px 0; }
-
-                /* Chat Styles */
-                .chat-column { border-left: 1px solid #eee; padding-left: 20px; display: flex; flex-direction: column; height: 400px; }
-                .chat-window { flex-grow: 1; overflow-y: auto; background: #fafafa; border-radius: 8px; padding: 10px; margin-bottom: 10px; border: 1px solid #eee; }
-                .empty-chat { color: #aaa; text-align: center; margin-top: 50%; font-style: italic; }
-                
-                .chat-bubble { padding: 8px 12px; margin-bottom: 8px; border-radius: 10px; font-size: 0.9rem; max-width: 80%; }
-                .chat-bubble.mine { background: #007bff; color: white; align-self: flex-end; margin-left: auto; }
-                .chat-bubble.theirs { background: #e9ecef; color: #333; }
-
-                .chat-input-area { display: flex; gap: 10px; }
-                .chat-input-area input { flex-grow: 1; padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
-                .chat-input-area button { width: auto; padding: 8px 16px; font-size: 0.9rem; }
+                .home-container { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 100%; max-width: 600px; text-align: center; border: 1px solid #e0e2e5; }
+                .app-header h1 { color: #333; font-size: 1.8rem; font-weight: 800; margin-bottom: 1rem; }
+                .subtitle { color: #777; margin-bottom: 1.5rem; }
 
                 /* Form Styles */
-                .planner-form .input-group { text-align: left; margin-bottom: 1.5rem; }
-                .planner-form input { width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 8px; }
-                button { width: 100%; padding: 1rem; background-color: #007bff; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+                .input-group { text-align: left; margin-bottom: 1rem; }
+                .input-group label { display: block; font-weight: 600; font-size: 0.9rem; color: #555; margin-bottom: 0.5rem; }
+                .input-group input { width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; }
+                
+                button { width: 100%; padding: 0.8rem; background-color: #007bff; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
                 button:hover { background-color: #0056b3; }
-                .btn-secondary { background-color: #6c757d; }
-                .back-link { display: block; margin-top: 20px; color: #007bff; text-decoration: none; text-align: center; }
+                .btn-secondary { background-color: #6c757d; margin-top: 10px; }
+                .back-link { display: inline-block; color: #777; text-decoration: none; font-weight: 600; margin-top: 10px; }
+
+                /* Session View Styles */
+                .invite-section { background: #e8f0fe; border: 2px dashed #007bff; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+                .code-display { font-size: 2.5rem; font-weight: 800; letter-spacing: 5px; color: #333; }
+                
+                .stats-row { display: flex; justify-content: space-around; margin-bottom: 1rem; font-weight: 600; color: #555; }
+
+                /* Chat Styles */
+                .chat-section { border: 1px solid #eee; border-radius: 8px; overflow: hidden; margin-bottom: 1rem; }
+                .chat-window { height: 250px; overflow-y: auto; background: #fafafa; padding: 10px; text-align: left; }
+                .empty-chat { text-align: center; color: #aaa; font-style: italic; margin-top: 100px; }
+                
+                .chat-bubble { padding: 8px 12px; margin-bottom: 8px; border-radius: 12px; font-size: 0.9rem; max-width: 80%; width: fit-content; }
+                .chat-bubble.mine { background: #007bff; color: white; margin-left: auto; border-bottom-right-radius: 0; }
+                .chat-bubble.theirs { background: #e9ecef; color: #333; margin-right: auto; border-bottom-left-radius: 0; }
+
+                .chat-input { display: flex; border-top: 1px solid #eee; }
+                .chat-input input { flex-grow: 1; border: none; padding: 12px; outline: none; }
+                .chat-input button { width: auto; border-radius: 0; margin: 0; }
             `}</style>
         </div>
     );
