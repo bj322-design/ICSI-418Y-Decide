@@ -10,23 +10,52 @@ const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = (event, username, password) => {
-    axios.get('http://localhost:9000/getUser', { params: { username, password}})
-        .then((res) => {
-            if (res.data) {
-                navigate('/Home');
-                //navigate('/CreateProject'); //Brings you to the create project tab
-                //alert('Login Successful')
+    const handleLogin = async (event) => {
+        if (event) event.preventDefault();
+
+        try {
+            const userRes = await axios.get('http://localhost:9000/getUser', {
+                params: { username, password }
+            });
+
+            if(userRes.data) {
+                navigate('/Home'); // Redirect Users to Home
+                return;
             }
-        })
-        .catch((err) => {
-            if (err.response && err.response.status === 404) {
-                 alert('Wrong Credentials');
-            } else {
+        }
+
+        catch(userErr)
+        {
+            if(userErr.response && userErr.response.status === 404) {
+                try {
+                    const hostRes = await axios.get('http://localhost:9000/getHost', {
+                        params: { username, password }
+                    });
+
+                    if (hostRes.data) {
+                        navigate('/HostHome'); // Redirect Hosts to HostHome
+                    }
+                }
+
+                catch (hostErr)
+                {
+                    if(hostErr.response && hostErr.response.status === 404)
+                    {
+                        alert('Wrong Credentials');
+                    }
+
+                    else {
+                        alert('Error in Login System');
+                    }
+                }
+            }
+
+            else
+            {
                 alert('Error in Login');
             }
-        });
-}
+        }
+    };
 
     return (
         <div class="login-container">
@@ -42,9 +71,9 @@ const Login = () => {
                     <input type="password" id="password" name="password" required value = {password} onChange = {(e) =>
                         setPassword(e.target.value)}></input>
                 </div>
-                 <button type="button" onClick={(event) => {
-                    handleLogin(event, username, password)
-                }}>Login</button>
+                <button type="button" onClick={(e) => handleLogin(e)}>
+                    Login
+                </button>
             </form>
 
             <div className="signup-link">
@@ -177,14 +206,7 @@ const Login = () => {
                 }
             `}</style>
         </div>
-
-
-
     );
 };
-
-
-
-
 
 export default Login;

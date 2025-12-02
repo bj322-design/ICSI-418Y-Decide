@@ -4,10 +4,26 @@ const app = express();
 const User = require('./UserSchema')
 const Host = require('./HostSchema')
 const Project = require('./Projects.js')
+const Event = require('./Events.js')
 const Team = require('./TeamName')
+const multer = require('multer')
+const path = require('path')
 
 app.use(express.json());
 app.use(cors())
+app.use('/uploads', express.static('uploads'));
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/')
+    },
+    filename: (req, file, cb) => {
+        const uniqueName = Date.now() + '-' + file.originalname;
+        cb(null, uniqueName);
+    }
+});
+
+const upload = multer({ storage: storage });
 
 const mongoose = require('mongoose');
 const mongoString = "mongodb+srv://b322:1968cobra@cluster0.yhsbzdf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
@@ -48,6 +64,21 @@ app.post('/createHost', async (req, res) => {
         res.status(500).send(error);
     }
 })
+
+app.get('/getHost', async (req, res) => {
+    const username = req.query.username;
+    const password = req.query.password;
+    try {
+        const host = await Host.findOne({ username, password });
+        if (host) {
+            res.send(host);
+        } else {
+            res.status(404).send(null);
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
 
 //USERS ________________________________________________________________________________________________
 app.post('/createUser', async (req, res) => {
@@ -105,9 +136,10 @@ app.get('/getUsers', async (req, res) => {
 
 //PROJECTS ___________________________________________________________________________________
 app.post('/createProject', async (req, res) => {
+    console.log(`SERVER: CREATE PROJECT REQ BODY: ${req.body.proj_name}`)
     try {
         const project = new Project(req.body);
-        project.save()
+        await project.save()
         console.log(`Project created! ${project}`)
         res.send(project)
     }
@@ -160,6 +192,57 @@ app.get('/getTeams', async (req, res) => {
         // Fetch all teams
         const teams = await Team.find()
         res.send(teams);
+    }
+    catch (error) {
+        res.status(500).send(error)
+    }
+})
+
+//EVENTS ___________________________________________________________________________________
+app.post('/createEvent', upload.single('event_promo'), async (req, res) => {
+    console.log(`SERVER: CREATE EVENT REQ BODY: ${req.body.event_name}`)
+
+    const imagePath = req.file ? `http://localhost:9000/uploads/${req.file.filename}` : '';
+
+    const newEventData = {
+        event_name: req.body.event_name,
+        event_location: req.body.event_location,
+        event_start: req.body.event_start,
+        event_end: req.body.event_end,
+        event_price: req.body.event_price,
+        event_desc: req.body.event_desc,
+        event_promo: imagePath
+    };
+
+    try {
+        const event = new Event(newEventData);
+        await event.save()
+        console.log(`Event created! ${event}`)
+        res.send(event)
+    }
+    catch (error) {
+        console.error('Error creating event:', error);
+        res.status(500).send(error)
+    }
+})
+
+app.get('/getEvents', async (req, res) => {
+    try {
+        const events = await Event.find()
+        let responseDetails = []
+        for (const event of events) {
+            responseDetails.push({
+                _id: event._id,
+                name: event.event_name,
+                location: event.event_location,
+                start: event.event_start,
+                end: event.event_end,
+                price: event.event_price,
+                description: event.event_desc,
+                promo_image: event.event_promo
+            })
+        }
+        res.send(responseDetails)
     }
     catch (error) {
         res.status(500).send(error)

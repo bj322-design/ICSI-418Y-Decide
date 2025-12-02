@@ -11,6 +11,9 @@ import Home from './Home';
 import ViewProjects from './ViewProjects';
 import ViewTeams from './ViewTeams';
 import HostSignup from "./HostRegistration";
+import CreateEvent from "./CreateEvent";
+import HostHome from "./HostHome";
+import ViewEvents from "./ViewEvents";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -22,8 +25,11 @@ root.render(
         <Route path="/HostSignup" element={<HostSignup />}></Route>
         <Route path="/CreateProject" element={<CreateProject/>}></Route>
         <Route path="/Home" element={<Home />}></Route>
+        <Route path="/HostHome" element={<HostHome />}></Route>
         <Route path="/ViewProjects" element={<ViewProjects />}></Route>
         <Route path="/ViewTeams" element={<ViewTeams />}></Route>
+        <Route path="/CreateEvent" element={<CreateEvent />}></Route>
+        <Route path="/ViewEvents" element={<ViewEvents />}></Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

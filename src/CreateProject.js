@@ -65,7 +65,7 @@ const CreateProject = () => {
                 
                 // Redirect user to the Home page after a short delay
                 setTimeout(() => {
-                    navigate('/Home');
+                    navigate('/HostHome');
                 }, 1500);
             })
             .catch((err) => {

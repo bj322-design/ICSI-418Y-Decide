@@ -1,6 +1,5 @@
 import logo from './logo.svg';
 import './App.css';
-import CreateProject from './CreateProject';
 
 
 function App() {
@@ -12,6 +11,7 @@ function App() {
         <Route path="/Login" element={<Login />}></Route>
         <Route path="/Signup" element={<Signup />}></Route>
         <Route path="/CreateProject" element={<CreateProject />}></Route>
+        <Route path="/CreateEvent" element={<CreateEvent />}></Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
