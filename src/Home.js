@@ -58,7 +58,7 @@ const Home = () => {
                     {!loading && !error && events.length === 0 && (
                         <div className="status-msg">
                             No events found. <br/>
-                            <Link to="/FindEvent" style={{ color: '$007bff' }}>Find some.</Link>
+                            <Link to="/CreateEvent" style={{ color: '#007bff' }}>Create one?</Link>
                         </div>
                     )}
 
@@ -107,13 +107,17 @@ const Home = () => {
 
                 {/* Navigation Buttons */}
                 <div className="nav-dock">
-                    <Link to="/Profile" className="dock-link">Profile</Link>
-                    <Link to="/Events" className="dock-link">Events</Link>
-                    <Link to="/Chat" className="dock-link">Chat</Link>
-                    <Link to="/Settings" className="dock-link">Settings</Link>
+                    {/* 👇 NEW: This link connects to your Social Planner feature */}
+                    <Link to="/SocialPlanner" className="dock-link" style={{ color: '#007bff', fontWeight: '800' }}>
+                        + Plan
+                    </Link>
+
+                    <Link to="/profile" className="dock-link">Profile</Link>
+                    <Link to="/events" className="dock-link">Events</Link>
+                    <Link to="/chat" className="dock-link">Chat</Link>
+                    <Link to="/settings" className="dock-link">Settings</Link>
                 </div>
             </div>
-
 
             <style>{`
                 /* General Layout Consistency */
@@ -140,7 +144,7 @@ const Home = () => {
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
-                    min-height: 975px;
+                    min-height: 800px; /* Adjusted height for better fit */
                 }
                 
                 .app-header h1 {
