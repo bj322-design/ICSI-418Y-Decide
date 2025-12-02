@@ -3,6 +3,7 @@ const cors = require('cors');
 const app = express();
 const User = require('./UserSchema')
 const Host = require('./HostSchema')
+const Admin = require('./AdminSchema');
 const Project = require('./Projects.js')
 const Event = require('./Events.js')
 const Team = require('./TeamName')
@@ -289,6 +290,54 @@ app.post('/inviteToGroup', async (req, res) => {
         }
     } catch (error) {
         res.status(500).send(error);
+    }
+});
+
+// ADMIN _______________________________________________________________________
+
+const ADMIN_SECRET_KEY = "admin_key";
+
+app.post('/CreateAdmin', async (req, res) => {
+    if (req.body.adminKey !== ADMIN_SECRET_KEY) {
+        console.log(`SERVER: Admin creation failed. Invalid Key.`);
+        return res.status(401).send("Invalid Admin Key");
+    }
+    console.log(`SERVER: CREATE ADMIN REQ BODY: ${req.body.username} ${req.body.f_name} ${req.body.l_name}`)
+    const un = req.body.username;
+    try {
+        const resultUser = await User.exists({ username: un });
+        const resultHost = await Host.exists({ username: un });
+        const resultAdmin = await Admin.exists({ username: un });
+
+        if(resultUser === null && resultHost === null && resultAdmin === null)
+        {
+            const admin = new Admin(req.body);
+            await admin.save();
+            console.log(`Admin created! ${admin}`);
+            res.send(admin);
+        } else {
+            console.log("Username already exists")
+            res.status(500).send("Username already exists")
+        }
+
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
+
+app.get('/getAdmin', async (req, res) => {
+    const { username, password } = req.query;
+    try {
+        const admin = await Admin.findOne({ username: username, password: password });
+        if(admin)
+        {
+            console.log("Admin Login Found:", admin.username);
+            res.json(admin);
+        } else {
+            res.status(404).json("Admin not found");
+        }
+    } catch (err) {
+        res.status(500).json(err);
     }
 });
 

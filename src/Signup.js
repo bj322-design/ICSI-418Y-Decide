@@ -2,8 +2,6 @@ import { Link } from 'react-router-dom';
 import axios from 'axios'
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-
     
 const Signup = () => {
     const navigate = useNavigate();
@@ -61,6 +59,10 @@ const Signup = () => {
             <div className="signup-link">
                 Already have an account? <Link to="/">Log in</Link>
             </div>
+
+            <div className="admin-link">
+                <Link to="/AdminSignup">Admin Signup</Link>
+            </div>
             
             
             <style jsx>{`
@@ -86,6 +88,7 @@ const Signup = () => {
                     max-width: 420px;
                     text-align: center;
                     border: 1px solid #e0e2e5;
+                    position: relative;
                 }
 
                 /* Heading styles */
@@ -163,6 +166,26 @@ const Signup = () => {
 
                 .signup-link a:hover {
                     text-decoration: underline;
+                }
+
+                .admin-link {
+                    position: absolute;
+                    bottom: 15px;
+                    left: 0;
+                    width: 100%;
+                    text-align: center;
+                }
+
+                .admin-link a {
+                    font-size: 0.8rem;
+                    color: #adb5bd;
+                    text-decoration: none;
+                    font-weight: 600;
+                    transition: color 0.3s ease;
+                }
+
+                .admin-link a:hover {
+                    color: #495057;
                 }
             `}</style>
         </div>

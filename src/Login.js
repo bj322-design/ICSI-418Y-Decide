@@ -41,15 +41,28 @@ const Login = () => {
                     }
                 }
 
-                catch (hostErr)
-                {
-                    if(hostErr.response && hostErr.response.status === 404)
-                    {
-                        alert('Wrong Credentials');
-                    }
+                catch(hostErr) {
+                    if (hostErr.response && hostErr.response.status === 404) {
+                        try {
+                            const adminRes = await axios.get('http://localhost:9000/getAdmin', {
+                                params: {username, password}
+                            });
 
-                    else {
-                        alert('Error in Login System');
+                            if (adminRes.data) {
+                                localStorage.setItem('adminId', adminRes.data._id);
+                                console.log("Admin Login Success!");
+                                navigate('/AdminHome'); // Redirect to Admin Dashboard
+                                return;
+                            }
+                        } catch (adminErr) {
+                            if (adminErr.response && adminErr.response.status === 404) {
+                                alert('Wrong Credentials');
+                            } else {
+                                alert('Error in Login System (Admin Check)');
+                            }
+                        }
+                    } else {
+                        alert('Error in Login System (Host Check)');
                     }
                 }
             }
