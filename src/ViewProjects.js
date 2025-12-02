@@ -8,6 +8,7 @@ const ViewProjects = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        document.title = 'View Projects';
         axios.get('http://localhost:9000/getProjects')
             .then((res) => {
                 setProjects(res.data);

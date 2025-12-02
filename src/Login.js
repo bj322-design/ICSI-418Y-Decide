@@ -3,7 +3,7 @@ import {React, useState} from "react";
 import axios from 'axios'
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-
+import {useEffect} from "react"
 
 const Login = () => {
     const navigate = useNavigate();
@@ -74,6 +74,10 @@ const Login = () => {
         }
     };
 
+    useEffect(() => {
+            document.title = 'Login'; 
+        }, []);
+
     return (
         <div className="page-wrapper">
             <div className="login-container">
@@ -85,6 +89,7 @@ const Login = () => {
                         <label>Username</label>
                         <input
                             type="text"
+                            id="User_ID"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             required
@@ -95,12 +100,13 @@ const Login = () => {
                         <label>Password</label>
                         <input
                             type="password"
+                            id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
                     </div>
-                    <button type="submit" className="login-btn">Log In</button>
+                    <button type="submit" id="submitBut" className="login-btn">Log In</button>
                 </form>
                 <div className="signup-link">
                     Don't have an account? <Link to="/signup">Sign up</Link>

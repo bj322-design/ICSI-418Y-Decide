@@ -1,18 +1,24 @@
 import React from 'react';
+import {useEffect} from "react"
 import { Link } from 'react-router-dom';
 
 const HostHome = () => {
-    return (
-        <div className = "page-wrapper">
-            <div className = "home-container">
-                <h1>Welcome to the Host Dashboard</h1>
-                <p className = "subtitle">Select an action to continue.</p>
 
-                <div className = "button-group">
-                    <Link to = "/CreateEvent" className = "nav-button create">
+    useEffect(() => {
+        document.title = 'Host Home';
+    }, []);
+
+    return (
+        <div className="page-wrapper">
+            <div className="home-container">
+                <h1>Welcome to the Host Dashboard</h1>
+                <p className="subtitle">Select an action to continue.</p>
+
+                <div className="button-group">
+                    <Link to="/CreateEvent" className="nav-button create">
                         Create Event
                     </Link>
-                    <Link to = "/ViewEvents" className = "nav-button view">
+                    <Link to="/ViewEvents" className="nav-button view">
                         View Your Events
                     </Link>
                 </div>

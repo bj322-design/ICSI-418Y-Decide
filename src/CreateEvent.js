@@ -19,6 +19,10 @@ const CreateEvent = () => {
         setEventPromoImage(e.target.files[0]);
     }
 
+    useEffect(() => {
+        document.title = 'Create Event';
+    }, []);
+
     const handleSubmit = (event) => {
         event.preventDefault();
 
@@ -35,13 +39,11 @@ const CreateEvent = () => {
 
         setMessage(null);
 
-        if(eventPromoImage)
-        {
+        if (eventPromoImage) {
             formData.append('event_promo', eventPromoImage);
         }
 
-        if(!eventName || !eventLocation || !eventStart || !eventEnd)
-        {
+        if (!eventName || !eventLocation || !eventStart || !eventEnd) {
             setMessage({ type: 'error', text: 'Event Name, Event Location, and Event Start/End Times are required.' });
             return;
         }
@@ -55,7 +57,7 @@ const CreateEvent = () => {
         })
             .catch((err) => {
                 console.error('Event creation failed: ', err);
-                setMessage({ type: 'error', text: 'Error in creating event.'});
+                setMessage({ type: 'error', text: 'Error in creating event.' });
             });
     };
 
