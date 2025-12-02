@@ -6,6 +6,7 @@ const Host = require('./HostSchema')
 const Project = require('./Projects.js')
 const Event = require('./Events.js')
 const Team = require('./TeamName')
+const Session = require('./SessionSchema');
 const multer = require('multer')
 const path = require('path')
 
@@ -249,6 +250,73 @@ app.get('/getEvents', async (req, res) => {
     }
 })
 
+// SOCIAL PLANNER ENDPOINTS ____________________________________________________
+
+app.post('/startGroupSession', async (req, res) => {
+    console.log("Starting Group Session with filters:", req.body);
+    const { host_id, location, activity_type } = req.body;
+
+    try {
+        // events that match the planner's location/type
+        const query = {};
+        if (location) {
+            query.event_location = { $regex: location, $options: 'i' };
+        }
+        if (activity_type) {
+            query.$or = [
+                { event_name: { $regex: activity_type, $options: 'i' } },
+                { event_desc: { $regex: activity_type, $options: 'i' } }
+            ];
+        }
+
+        const matchedEvents = await Event.find(query);
+
+        if (matchedEvents.length === 0) {
+            return res.status(404).send({ message: "No events found matching criteria" });
+        }
+
+        const eventIds = matchedEvents.map(e => e._id);
+
+        // create session entry
+        const newSession = new Session({
+            session_code: Math.floor(1000 + Math.random() * 9000).toString(),
+            host_id: host_id,
+            event_ids: eventIds,
+            votes: [],
+            status: 'active'
+        });
+
+        await newSession.save();
+        
+        res.send({ 
+            session: newSession, 
+            event_count: eventIds.length 
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
+});
+
+// check status
+app.get('/sessionStatus/:sessionCode', async (req, res) => {
+    try {
+        const session = await Session.findOne({ session_code: req.params.sessionCode });
+        if (!session) return res.status(404).send("Session not found");
+
+        const uniqueVoters = [...new Set(session.votes.map(v => v.user_id))];
+
+        res.send({
+            session_code: session.session_code,
+            headcount: uniqueVoters.length,
+            total_votes: session.votes.length,
+            status: session.status
+        });
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
 
 // Start Server
 const PORT = 9000;
