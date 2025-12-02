@@ -20,7 +20,7 @@ public class Lexer {
                 normalUser(data);
             }
         }
-        System.out.println(data.get("NU_FistName"));
+        //System.out.println(data.get("NU_FistName"));
     }
 
     private void normalUser(Map data){

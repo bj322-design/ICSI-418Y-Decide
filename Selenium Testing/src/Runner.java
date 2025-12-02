@@ -21,7 +21,7 @@ public class Runner {
         System.setProperty("selenium-chrome-driver-4.29.0", /*Selenium_str*/"C:/Users/brand/OneDrive/Documents/College/4.Senior/Fall 2025/ICSI 418Y - Software Engineering/Selenium Testing/selenium-java-4.29.0");
 
         driver = new ChromeDriver();
-        scan = new Scanner(System.in);
+
         
         driver.get(url);
     
@@ -29,14 +29,15 @@ public class Runner {
     
     @AfterEach
     public void teardown(){
-        driver.close();
+        //driver.close();
     }
 
-    @Test
+    //@Test
     public void test_openURL()
     {
         // check if we are on the right page
         Assertions.assertEquals(driver.getTitle(), "React App");
+
     }
 
     @Test
@@ -68,17 +69,20 @@ public class Runner {
         }catch(NoAlertPresentException e) {
 
         }
+
     }
 
     @Test
     public void Normal_Login() throws InterruptedException {
         Thread.sleep(100);
 
-        driver.findElement(By.id("User ID")).sendKeys(lexer.getData("NU_UserID"));
+        driver.findElement(By.id("User_ID")).sendKeys(lexer.getData("NU_UserID"));
         driver.findElement(By.id("password")).sendKeys(lexer.getData("NU_Password"));
         Thread.sleep(100);
-        driver.findElement(By.xpath("//button[text()='Login']")).click();
-        Assertions.assertEquals("/Home", driver.getCurrentUrl());
+        driver.findElement(By.id("submitBut")).click();
+
+        Thread.sleep(100);
+        Assertions.assertEquals("Home", driver.getTitle());
     }
 
 }

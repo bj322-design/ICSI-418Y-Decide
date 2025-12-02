@@ -89,6 +89,7 @@ const Login = () => {
                         <label>Username</label>
                         <input
                             type="text"
+                            id="User_ID"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             required
@@ -99,12 +100,13 @@ const Login = () => {
                         <label>Password</label>
                         <input
                             type="password"
+                            id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
                     </div>
-                    <button type="submit" className="login-btn">Log In</button>
+                    <button type="submit" id="submitBut" className="login-btn">Log In</button>
                 </form>
                 <div className="signup-link">
                     Don't have an account? <Link to="/signup">Sign up</Link>
