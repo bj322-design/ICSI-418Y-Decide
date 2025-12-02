@@ -26,6 +26,7 @@ const ViewTeams = () => {
     };
 
     useEffect(() => {
+        document.title = 'View Teams';
         fetchTeams();
     }, []);
 

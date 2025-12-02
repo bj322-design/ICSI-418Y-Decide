@@ -10,6 +10,7 @@ const MyEvents = () => {
     const currentUserId = localStorage.getItem('userId');
 
     useEffect(() => {
+        document.title = 'My Events'; 
         fetchData();
     }, []);
 

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios'
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { useEffect } from "react"
 
 
 const HostSignup = () => {
@@ -22,6 +22,9 @@ const HostSignup = () => {
             alert('Error in Signing Up')
         }
     }
+    useEffect(() => {
+        document.title = 'Host Registration';
+    }, []);
 
 
     return (

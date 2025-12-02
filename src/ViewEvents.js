@@ -8,6 +8,7 @@ const ViewEvents = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        document.title = 'View Events';
         axios.get('http://localhost:9000/getEvents')
             .then((res) => {
                 setEvents(res.data);

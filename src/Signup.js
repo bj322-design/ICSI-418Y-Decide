@@ -2,14 +2,15 @@ import { Link } from 'react-router-dom';
 import axios from 'axios'
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-    
+import {useEffect} from "react"
+
 const Signup = () => {
     const navigate = useNavigate();
     const [f_name, setFirstName] = useState('');
     const [l_name, setLastName] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    
+
     const handleSignUp = async () => {
         try {
             await axios.post('http://localhost:9000/createUser', { f_name, l_name, username, password });
@@ -19,7 +20,9 @@ const Signup = () => {
             alert('Error in Signing Up')
         }
     }
-        
+    useEffect(() => {
+        document.title = 'Sign Up';
+    }, []);
 
     return (
         <div class="login-container">
@@ -28,30 +31,30 @@ const Signup = () => {
 
                 <div class="input-group">
                     <label htmlFor="First Name">First Name:</label>
-                    <input type="text" id="First Name" name="First Name" required value = {f_name} onChange = {(e) =>
+                    <input type="text" id="First Name" name="First Name" required value={f_name} onChange={(e) =>
                         setFirstName(e.target.value)}></input>
                 </div>
 
                 <div class="input-group">
                     <label htmlFor="Last Name">Last Name:</label>
-                    <input type="text" id="Last Name" name="Last Name" required value = {l_name} onChange = {(e) =>
+                    <input type="text" id="Last Name" name="Last Name" required value={l_name} onChange={(e) =>
                         setLastName(e.target.value)}></input>
                 </div>
 
                 <div class="input-group">
                     <label htmlFor="User ID">User ID:</label>
-                    <input type="text" id="User ID" name="User ID" requiredvalue = {username} onChange = {(e) =>
+                    <input type="text" id="User ID" name="User ID" requiredvalue={username} onChange={(e) =>
                         setUsername(e.target.value)}></input>
                 </div>
-                
-                
+
+
                 <div class="input-group">
                     <label htmlFor="password">Password:</label>
-                    <input type="password" id="password" name="password" requiredvalue = {password} onChange = {(e) =>
+                    <input type="password" id="password" name="password" requiredvalue={password} onChange={(e) =>
                         setPassword(e.target.value)}></input>
                 </div>
-                
-                
+
+
                 <button type="button" onClick={(event) => handleSignUp(event, f_name, l_name, username, password)}>Sign Up</button>
 
             </form>
@@ -63,8 +66,8 @@ const Signup = () => {
             <div className="admin-link">
                 <Link to="/AdminSignup">Admin Signup</Link>
             </div>
-            
-            
+
+
             <style jsx>{`
                 /* A modern, clean stylesheet for the login and signup forms */
                 body {

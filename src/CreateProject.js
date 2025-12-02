@@ -21,6 +21,7 @@ const CreateProject = () => {
 
     // 1. Fetch Users and Teams on component mount
     useEffect(() => {
+        document.title = 'Create Project'; 
         // Fetch Users
         axios.get('http://localhost:9000/getUsers')
             .then((response) => {

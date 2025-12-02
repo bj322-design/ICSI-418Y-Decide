@@ -13,6 +13,7 @@ const Home = () => {
     const currentUserId = localStorage.getItem('userId');
 
     useEffect(() => {
+        document.title = 'Home'; 
         axios.get('http://localhost:9000/getEvents')
             .then((res) => {
                 setEvents(res.data);

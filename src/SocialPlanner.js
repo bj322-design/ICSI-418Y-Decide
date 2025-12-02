@@ -13,10 +13,13 @@ const SocialPlanner = () => {
     const [chatLog, setChatLog] = useState([]);
     const [chatMessage, setChatMessage] = useState("");
 
-    const hostId = "social_planner_user_1"; 
+    const hostId = "social_planner_user_1";
     const hostName = "Host (You)";
 
     useEffect(() => {
+
+        document.title = 'Social Planner';
+
         let interval = null;
         if (createdSession) {
             const fetchUpdates = () => {
@@ -30,7 +33,7 @@ const SocialPlanner = () => {
             fetchUpdates();
             interval = setInterval(fetchUpdates, 3000);
         }
-        return () => clearInterval(interval); 
+        return () => clearInterval(interval);
     }, [createdSession]);
 
     const handleCreateSession = (e) => {
@@ -52,7 +55,7 @@ const SocialPlanner = () => {
 
     const handleSendMessage = (e) => {
         e.preventDefault();
-        if(!chatMessage.trim()) return;
+        if (!chatMessage.trim()) return;
         axios.post('http://localhost:9000/sendMessage', {
             session_code: createdSession.session_code,
             sender: hostName,
@@ -86,7 +89,7 @@ const SocialPlanner = () => {
                             </div>
                             <button type="submit" disabled={loading}>{loading ? "Searching..." : "Create Session"}</button>
                         </form>
-                        <br/>
+                        <br />
                         <Link to="/Home" className="back-link">Cancel</Link>
                     </div>
                 ) : (
@@ -95,7 +98,7 @@ const SocialPlanner = () => {
                             <span className="invite-label">Join Code:</span>
                             <div className="code-display">{createdSession.session_code}</div>
                         </div>
-                        
+
                         <div className="stats-row">
                             <span>👥 {headcount} Joined</span>
                             <span>🎉 {eventCount} Options</span>
@@ -103,7 +106,7 @@ const SocialPlanner = () => {
 
                         <div className="chat-section">
                             <div className="chat-window">
-                                {chatLog.length === 0 ? <p className="empty-chat">Start the discussion...</p> : 
+                                {chatLog.length === 0 ? <p className="empty-chat">Start the discussion...</p> :
                                     chatLog.map((msg, i) => (
                                         <div key={i} className={`chat-bubble ${msg.sender === hostName ? 'mine' : 'theirs'}`}>
                                             <strong>{msg.sender}: </strong> {msg.message}
