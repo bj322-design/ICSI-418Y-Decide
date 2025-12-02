@@ -3,7 +3,7 @@ const cors = require('cors');
 const app = express();
 const User = require('./UserSchema')
 const Host = require('./HostSchema')
-//const Admin = require('./AdminSchema');
+const Admin = require('./AdminSchema');
 const Project = require('./Projects.js')
 const Event = require('./Events.js')
 const Team = require('./TeamName')
@@ -127,7 +127,7 @@ app.get('/getUser', async (req, res) => {
 
 app.get('/getUsers', async (req, res) => {
     try {
-        const userList = await User.find({}, {f_name:1, l_name:1, _id:1}); 
+        const userList = await User.find({}, {f_name:1, l_name:1, _id:1});
         res.send(userList);
     }
     catch (error) {
@@ -155,17 +155,17 @@ app.get('/getProjects', async (req, res) => {
         const projects = await Project.find()
         let responseDetails = []
         for (const project of projects) {
-           const manager = await User.findById(project.mgr_id) 
-           const owner = await User.findById(project.prod_owner_id) 
-           const team = await Team.findById(project.team_id)
-           responseDetails.push({
-             _id: project._id,
-             project_name: project.proj_name, 
-             description: project.proj_desc,
-             manager_details: {firstName: manager ? manager.firstName : 'N/A', lastName: manager ? manager.lastName : ''},
-             owner_details: {firstName: owner ? owner.firstName : 'N/A', lastName: owner ? owner.lastName : ''},
-             team_details: {team_name: team ? team.team_name : 'N/A'}
-           })
+            const manager = await User.findById(project.mgr_id)
+            const owner = await User.findById(project.prod_owner_id)
+            const team = await Team.findById(project.team_id)
+            responseDetails.push({
+                _id: project._id,
+                project_name: project.proj_name,
+                description: project.proj_desc,
+                manager_details: {firstName: manager ? manager.firstName : 'N/A', lastName: manager ? manager.lastName : ''},
+                owner_details: {firstName: owner ? owner.firstName : 'N/A', lastName: owner ? owner.lastName : ''},
+                team_details: {team_name: team ? team.team_name : 'N/A'}
+            })
         }
         res.send(responseDetails)
     }
@@ -378,10 +378,10 @@ app.post('/startGroupSession', async (req, res) => {
         });
 
         await newSession.save();
-        
-        res.send({ 
-            session: newSession, 
-            event_count: eventIds.length 
+
+        res.send({
+            session: newSession,
+            event_count: eventIds.length
         });
 
     } catch (error) {
@@ -401,7 +401,7 @@ app.get('/sessionDetails/:sessionCode', async (req, res) => {
 
         res.send({
             session_code: session.session_code,
-            headcount: uniqueVoters.length, 
+            headcount: uniqueVoters.length,
             chat_log: session.chat_log // chat history
         });
     } catch (error) {
@@ -414,7 +414,7 @@ app.post('/sendMessage', async (req, res) => {
     try {
         const { session_code, sender, message } = req.body;
         const session = await Session.findOne({ session_code });
-        
+
         if (session) {
             session.chat_log.push({ sender, message });
             await session.save();

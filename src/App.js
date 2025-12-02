@@ -10,8 +10,8 @@ import CreateEvent from "./CreateEvent";
 import CreateProject from "./CreateProject";
 import SocialPlanner from "./SocialPlanner";
 import HostSignup from "./HostRegistration";
-//import AdminSignup from "./AdminSignup";
-//import AdminHome from "./AdminHome";
+import AdminSignup from "./AdminSignup";
+import AdminHome from "./AdminHome";
 
 function App() {
   return (
@@ -32,8 +32,8 @@ function App() {
           <Route path="/CreateProject" element={<CreateProject />}></Route>
           <Route path="/SocialPlanner" element={<SocialPlanner />}></Route>
           <Route path="/HostSignup" element={<HostSignup />}></Route>
-          {/*<Route path="/AdminSignup" element={<AdminSignup />}></Route>
-          <Route path="/AdminHome" element={<AdminHome  />}></Route>*/}
+          <Route path="/AdminSignup" element={<AdminSignup />}></Route>
+          <Route path="/AdminHome" element={<AdminHome  />}></Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
