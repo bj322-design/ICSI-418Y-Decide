@@ -1,0 +1,6 @@
+Normal_User
+test        #First Name
+test        #Last Name
+00000       #User ID
+test        #Password
+;
