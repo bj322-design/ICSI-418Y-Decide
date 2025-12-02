@@ -32,6 +32,11 @@ root.render(
         <Route path="/CreateEvent" element={<CreateEvent />}></Route>
         <Route path="/ViewEvents" element={<ViewEvents />}></Route>
         <Route path="/SocialPlanner" element={<SocialPlanner />}></Route>
+        <Route path="/FindEvent" element={<FindEvent />}></Route>
+        <Route path="/Profile" element={<Profile />}></Route>
+        <Route path="/Events" element={<Events />}></Route>
+        <Route path="/Chat" element={<Chat />}></Route>
+        <Route path="/Settings" element={<Settings />}></Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

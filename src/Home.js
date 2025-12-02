@@ -107,10 +107,10 @@ const Home = () => {
 
                 {/* Navigation Buttons */}
                 <div className="nav-dock">
-                    <Link to="/profile" className="dock-link">Profile</Link>
-                    <Link to="/events" className="dock-link">Events</Link>
-                    <Link to="/chat" className="dock-link">Chat</Link>
-                    <Link to="/settings" className="dock-link">Settings</Link>
+                    <Link to="/Profile" className="dock-link">Profile</Link>
+                    <Link to="/Events" className="dock-link">Events</Link>
+                    <Link to="/Chat" className="dock-link">Chat</Link>
+                    <Link to="/Settings" className="dock-link">Settings</Link>
                 </div>
             </div>
 
