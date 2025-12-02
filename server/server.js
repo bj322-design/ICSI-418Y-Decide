@@ -26,7 +26,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 const mongoose = require('mongoose');
-
 const mongoString = "mongodb+srv://b322:1968cobra@cluster0.yhsbzdf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 mongoose.connect(mongoString);
 
