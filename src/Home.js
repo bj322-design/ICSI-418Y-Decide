@@ -1,25 +1,118 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios'
 
 const Home = () => {
+    const [events, setEvents] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        axios.get('http://localhost:9000/getEvents')
+            .then((res) => {
+                setEvents(res.data);
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error("Error fetching events: ", err);
+                setError("Could not load events.");
+                setLoading(false);
+            });
+    }, []);
+
+    const formatDate = (isoString) => {
+        if (!isoString) return 'TBD';
+        const date = new Date(isoString);
+        return date.toLocaleString('en-US', {
+            weekday: 'short', // "Mon"
+            year: 'numeric',  // "2025"
+            month: 'short',   // "Dec"
+            day: 'numeric',   // "1"
+            hour: '2-digit',  // "07"
+            minute: '2-digit' // "30"
+        });
+    };
+
+    const handleSwipe = () => {
+        setCurrentIndex((prev) => (prev + 1) < events.length ? prev + 1 : 0);
+    };
+
+    const currentEvent = events.length > 0 ? events[currentIndex] : null;
+
     return (
         <div className="page-wrapper">
             <div className="home-container">
-                <h1>Welcome to the Project Dashboard</h1>
-                <p className="subtitle">Select an action to continue.</p>
-                
-                <div className="button-group">
-                    <Link to="/CreateProject" className="nav-button create">
-                        Create New Project
-                    </Link>
-                    <Link to="/ViewProjects" className="nav-button view">
-                        View All Projects
-                    </Link>
-                    <Link to="/ViewTeams" className="nav-button teams">
-                        View Teams
-                    </Link>
+                {/* Header */}
+                <div className="app-header">
+                    <h1>decide.</h1>
+                </div>
+
+                {/* Swipe Card Area */}
+                <div className="card-area">
+                    {loading && <div className="status-msg">Loading events...</div>}
+
+                    {error && <div className="status-msg error">{error}</div>}
+
+                    {!loading && !error && events.length === 0 && (
+                        <div className="status-msg">
+                            No events found. <br/>
+                            <Link to="/FindEvent" style={{ color: '$007bff' }}>Find some.</Link>
+                        </div>
+                    )}
+
+                    {!loading && currentEvent && (
+                        <div className="event-card">
+                            <div className="card-image-container">
+                                {currentEvent.promo_image ? (
+                                    <img
+                                        src={currentEvent.promo_image}
+                                        alt={currentEvent.name}
+                                        className="card-image"
+                                    />
+                                ) : (
+                                    <div className="card-image-placeholder">
+                                        <span>No Image</span>
+                                    </div>
+                                )}
+                                <div className="price-tag">
+                                    {currentEvent.price ? `$${currentEvent.price}` : `Free`}
+                                </div>
+                            </div>
+
+                            <div className="card-content">
+                                <h2>{currentEvent.name}</h2>
+                                {currentEvent.description} <br/>
+                                <p className="event-details">
+                                    {currentEvent.location} <br/>
+                                    <span className="event-time">{formatDate(currentEvent.start)}</span>
+                                </p>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Swiping Action Buttons */}
+                <div className="action-controls">
+                    <button onClick={handleSwipe} className="action-button pass" disabled={!currentEvent}>
+                        ✕
+                    </button>
+                    <button onClick={handleSwipe} className="action-button join" disabled={!currentEvent}>
+                        ♥
+                    </button>
+                </div>
+
+                <hr className={"divider"}/>
+
+                {/* Navigation Buttons */}
+                <div className="nav-dock">
+                    <Link to="/profile" className="dock-link">Profile</Link>
+                    <Link to="/events" className="dock-link">Events</Link>
+                    <Link to="/chat" className="dock-link">Chat</Link>
+                    <Link to="/settings" className="dock-link">Settings</Link>
                 </div>
             </div>
+
 
             <style>{`
                 /* General Layout Consistency */
@@ -36,76 +129,200 @@ const Home = () => {
 
                 .home-container {
                     background-color: #ffffff;
-                    padding: 3rem;
+                    padding: 2rem;
                     border-radius: 12px;
                     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
                     width: 100%;
-                    max-width: 500px;
+                    max-width: 600px;
                     text-align: center;
                     border: 1px solid #e0e2e5;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    min-height: 975px;
                 }
                 
-                h1 {
+                .app-header h1 {
                     color: #333;
-                    margin-bottom: 0.5rem;
+                    margin: 0;
                     font-size: 2rem;
-                    font-weight: 700;
+                    font-weight: 800;
+                    letter-spacing: -1px;
                 }
                 
                 .subtitle {
-                    color: #555;
-                    margin-bottom: 2rem;
-                    font-size: 1.1rem;
+                    color: #777;
+                    margin: 0 0 1rem 0;
+                    font-size: 0.9rem;
                 }
                 
-                /* Navigation Buttons */
-                .button-group {
+                /* Card Styles */
+                .card-area {
+                    flex-grow: 1;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 1.5rem;
+                    position: relative;
+                }
+                
+                .status-msg {
+                    color: #777;
+                    font-size: 1rem;
+                    font-style: italic;
+                }
+                
+                .status-msg.error {
+                    color: #dc3545
+                }
+                
+                .event-card {
+                    background: white;
+                    border: 1px solid #e0e2e5;
+                    border-radius: 16px;
+                    overflow: hidden;
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+                    width: 100%;
+                    height: 500px;
                     display: flex;
                     flex-direction: column;
-                    gap: 1rem;
+                    transition: transform 0.2s ease;
                 }
-                
-                .nav-button {
-                    display: block;
-                    padding: 1rem;
-                    border-radius: 8px;
-                    text-decoration: none;
+
+                .card-image-container {
+                    height: 350px;
+                    position: relative;
+                    background-color: #f0f2f5;
+                    overflow: hidden;
+                }
+
+                .card-image {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+
+                .card-image-placeholder {
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: #999;
+                    font-weight: 600;
+                }
+
+                .price-tag {
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background: rgba(0,0,0,0.7);
+                    color: white;
+                    padding: 4px 10px;
+                    border-radius: 20px;
+                    font-size: 0.85rem;
                     font-weight: 700;
-                    font-size: 1.1rem;
-                    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-                    color: white; /* Default text color */
                 }
 
-                /* Specific Button Styles */
-                .nav-button.create {
-                    background-color: #007bff;
-                    box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
+                .card-content {
+                    padding: 1.25rem;
+                    text-align: left;
+                    flex-grow: 1;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
                 }
-                
-                .nav-button.view {
+
+                .card-content h2 {
+                    margin: 0 0 0.5rem 0;
+                    font-size: 1.4rem;
+                    color: #333;
+                    line-height: 1;
+                }
+
+                .event-details {
+                    margin: 0;
+                    color: #555;
+                    font-size: 0.95rem;
+                }
+
+                .event-time {
+                    color: #007bff;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    display: block;
+                    margin-top: 4px;
+                }
+
+                /* Action Buttons */
+                .action-controls {
+                    display: flex;
+                    justify-content: center;
+                    gap: 2rem;
+                    margin-bottom: 1.5rem;
+                }
+
+                .action-button {
+                    width: 60px;
+                    height: 60px;
+                    border-radius: 50%;
+                    border: none;
+                    font-size: 1.5rem;
+                    cursor: pointer;
+                    transition: transform 0.2s, box-shadow 0.2s;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+                }
+
+                .action-button:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
+
+                .action-button:hover:not(:disabled) {
+                    transform: scale(1.1);
+                }
+
+                .action-button.pass {
+                    background-color: #ffffff;
+                    border: 2px solid #dc3545;
+                    color: #dc3545;
+                }
+
+                .action-button.join {
                     background-color: #28a745;
-                    box-shadow: 0 4px 6px rgba(40, 167, 69, 0.2);
-                }
-                
-                .nav-button.teams {
-                    background-color: #ffc107;
-                    color: #333; /* Darker text for yellow background */
-                    box-shadow: 0 4px 6px rgba(255, 193, 7, 0.2);
+                    color: white;
+                    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
                 }
 
-                .nav-button:hover {
-                    transform: translateY(-3px);
-                    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+                .divider {
+                    border: 0;
+                    height: 1px;
+                    background: #e0e2e5;
+                    margin: 0 0 1rem 0;
+                    width: 100%;
                 }
-                
-                .nav-button.create:hover {
-                    background-color: #0056b3;
+
+                /* Bottom Navigation Dock */
+                .nav-dock {
+                    display: flex;
+                    justify-content: space-around;
+                    align-items: center;
                 }
-                .nav-button.view:hover {
-                    background-color: #1e7e34;
+
+                .dock-link {
+                    text-decoration: none;
+                    color: #777;
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                    padding: 0.5rem;
+                    transition: color 0.2s;
                 }
-                .nav-button.teams:hover {
-                    background-color: #e0a800;
+
+                .dock-link:hover {
+                    color: #007bff;
                 }
             `}</style>
         </div>
