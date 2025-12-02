@@ -1,13 +1,18 @@
 const mongoose = require("mongoose");
 
 const SessionSchema = new mongoose.Schema({
-    session_code: String, // 4 digit invite code
-    host_id: String,      // ID of Social Planner
-    event_ids: [String],  // events list selected by filters
-    votes: [{             // store votes here later
+    session_code: String,
+    host_id: String,
+    event_ids: [String],
+    votes: [{
         user_id: String,
         event_id: String,
         vote: String
+    }],
+    chat_log: [{
+        sender: String,
+        message: String,
+        timestamp: { type: Date, default: Date.now }
     }],
     status: { type: String, default: 'active' }
 });
