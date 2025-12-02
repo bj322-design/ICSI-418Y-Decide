@@ -188,10 +188,12 @@ app.post('/createTeam', async (req, res) => {
     }
 })
 
-app.get('/getTeams', async (req, res) => {
+app.get('/getMyGroups', async (req, res) => {
+    const { managerId } = req.query;
+
     try {
         // Fetch all teams
-        const teams = await Team.find()
+        const teams = await Team.find({ manager_id: managerId });
         res.send(teams);
     }
     catch (error) {
@@ -249,6 +251,46 @@ app.get('/getEvents', async (req, res) => {
         res.status(500).send(error)
     }
 })
+
+app.post('/likeEvent', async (req, res) => {
+    const { userId, eventId, eventName } = req.body;
+    console.log(`SERVER: User ${userId} like Event ${eventName}`);
+
+    try {
+        const newGroup = new Team({
+            team_name: `Group for ${eventName}`,
+            manager_id: userId,
+            event_id: eventId,
+            members: [userId]
+        });
+
+        await newGroup.save();
+        console.log(`Created new social group: ${newGroup._id}`);
+        res.send(newGroup);
+    } catch (error) {
+        console.error("Error liking event: ", error);
+        res.status(500).send(error);
+    }
+});
+
+app.post('/inviteToGroup', async (req, res) => {
+    const { teamId, userIdToInvite } = req.body;
+
+    try {
+        const team = await Team.findById(teamId);
+        if (!team) return res.status(404).send("Group not found");
+
+        if(!team.members.includes(userIdToInvite)) {
+            team.members.push(userIdToInvite);
+            await team.save();
+            res.send(team);
+        } else {
+            res.status(400).send("User already in group");
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
 
 // SOCIAL PLANNER ENDPOINTS ____________________________________________________
 

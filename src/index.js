@@ -3,43 +3,13 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from './Login';
-import Signup from './Signup' 
-import CreateProject from './CreateProject';
-import Home from './Home';
-import ViewProjects from './ViewProjects';
-import ViewTeams from './ViewTeams';
-import HostSignup from "./HostRegistration";
-import CreateEvent from "./CreateEvent";
-import HostHome from "./HostHome";
-import ViewEvents from "./ViewEvents";
-import SocialPlanner from './SocialPlanner';
+import App from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
- <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />}></Route>
-        <Route path="/Signup" element={<Signup />}></Route>
-        <Route path="/HostSignup" element={<HostSignup />}></Route>
-        <Route path="/CreateProject" element={<CreateProject/>}></Route>
-        <Route path="/Home" element={<Home />}></Route>
-        <Route path="/HostHome" element={<HostHome />}></Route>
-        <Route path="/ViewProjects" element={<ViewProjects />}></Route>
-        <Route path="/ViewTeams" element={<ViewTeams />}></Route>
-        <Route path="/CreateEvent" element={<CreateEvent />}></Route>
-        <Route path="/ViewEvents" element={<ViewEvents />}></Route>
-        <Route path="/SocialPlanner" element={<SocialPlanner />}></Route>
-          {/* <Route path="/FindEvent" element={<FindEvent />}></Route>
-        <Route path="/Profile" element={<Profile />}></Route>
-        <Route path="/Events" element={<Events />}></Route>
-        <Route path="/Chat" element={<Chat />}></Route>
-        <Route path="/Settings" element={<Settings />}></Route> */}
-      </Routes>
-    </BrowserRouter>
-  </React.StrictMode>
+    <React.StrictMode>
+        <App />
+    </React.StrictMode>
 );
   
   /*(

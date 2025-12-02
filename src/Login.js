@@ -9,24 +9,28 @@ const Login = () => {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
     const handleLogin = async (event) => {
         if (event) event.preventDefault();
 
         try {
-            const userRes = await axios.get('http://localhost:9000/getUser', {
+            const res = await axios.get('http://localhost:9000/getUser', {
                 params: { username, password }
             });
 
-            if(userRes.data) {
+            if(res.data) {
+                localStorage.setItem('userId', res.data._id);
+                localStorage.setItem('firstName', res.data.f_name);
+                console.log("Login Success! User ID Stored: ", res.data._id);
                 navigate('/Home'); // Redirect Users to Home
                 return;
             }
         }
 
-        catch(userErr)
+        catch(err)
         {
-            if(userErr.response && userErr.response.status === 404) {
+            if(err.response && err.response.status === 404) {
                 try {
                     const hostRes = await axios.get('http://localhost:9000/getHost', {
                         params: { username, password }
@@ -58,26 +62,36 @@ const Login = () => {
     };
 
     return (
-        <div class="login-container">
-            <h1>Login</h1>
-            <form action="#" method="post">
-                <div className="input-group">
-                    <label htmlFor="User ID">User ID:</label>
-                    <input type="text" id="User ID" name="User ID" required value = {username} onChange = {(e) =>
-                        setUsername(e.target.value)}></input>
-                </div>
-                <div class="input-group">
-                    <label htmlFor="password">Password:</label>
-                    <input type="password" id="password" name="password" required value = {password} onChange = {(e) =>
-                        setPassword(e.target.value)}></input>
-                </div>
-                <button type="button" onClick={(e) => handleLogin(e)}>
-                    Login
-                </button>
-            </form>
+        <div className="page-wrapper">
+            <div className="login-container">
+                <h1>Welcome Back</h1>
+                <p className="subtitle">Login to decide your next plan.</p>
+                <form onSubmit={handleLogin}>
+                    {error && <div className="error-message">{error}</div>}
+                    <div className="input-group">
+                        <label>Username</label>
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
 
-            <div className="signup-link">
-                Don't have an account? <Link to="/Signup">Sign up</Link>
+                    <div className="input-group">
+                        <label>Password</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <button type="submit" className="login-btn">Log In</button>
+                </form>
+                <div className="signup-link">
+                    Don't have an account? <Link to="/signup">Sign up</Link>
+                </div>
             </div>
 
             <div className="hostreg-link">

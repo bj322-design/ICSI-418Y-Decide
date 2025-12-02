@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import axios from 'axios'
 
 
 const Home = () => {
+    const navigate = useNavigate();
     const [events, setEvents] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const currentUserId = localStorage.getItem('userId');
 
     useEffect(() => {
         axios.get('http://localhost:9000/getEvents')
@@ -35,7 +38,24 @@ const Home = () => {
         });
     };
 
-    const handleSwipe = () => {
+    const handleAction = (action) => {
+        const currentEvent = events[currentIndex];
+
+        if(action === 'join') {
+            axios.post('http://localhost:9000/likeEvent', {
+                userId: currentUserId,
+                eventId: currentEvent._id,
+                eventName: currentEvent.name
+            }).then((res) => {
+                console.log("Group created: ", res.data);
+                navigate('/events');
+            }).catch((err) => console.error("Error joining event: ", err));
+        } else {
+            moveToNextCard();
+        }
+    }
+
+    const moveToNextCard = () => {
         setCurrentIndex((prev) => (prev + 1) < events.length ? prev + 1 : 0);
     };
 
@@ -95,10 +115,10 @@ const Home = () => {
 
                 {/* Swiping Action Buttons */}
                 <div className="action-controls">
-                    <button onClick={handleSwipe} className="action-button pass" disabled={!currentEvent}>
+                    <button onClick={() => handleAction('pass')} className="action-button pass" disabled={!currentEvent}>
                         ✕
                     </button>
-                    <button onClick={handleSwipe} className="action-button join" disabled={!currentEvent}>
+                    <button onClick={() => handleAction('join')} className="action-button join" disabled={!currentEvent}>
                         ♥
                     </button>
                 </div>
@@ -108,7 +128,7 @@ const Home = () => {
                 {/* Navigation Buttons */}
                 <div className="nav-dock">
                     <Link to="/SocialPlanner" className="dock-link">Plan</Link>
-                    <Link to="/Events" className="dock-link">Events</Link>
+                    <Link to="/Events" className="dock-link">My Events</Link>
                     <Link to="/Chat" className="dock-link">Chat</Link>
                     <Link to="/Profile" className="dock-link">Profile</Link>
                     <Link to="/Settings" className="dock-link">Settings</Link>
