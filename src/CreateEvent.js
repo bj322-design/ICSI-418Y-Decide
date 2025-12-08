@@ -164,7 +164,7 @@ const CreateEvent = () => {
                         />
                     </div>
 
-                    <button type="submit">Create Event</button>
+                    <button type="submit" id='submit'>Create Event</button>
                 </form>
 
                 <Link to="/HostHome" className="back-link">← Back to Dashboard</Link>

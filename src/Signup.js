@@ -25,7 +25,7 @@ const Signup = () => {
     }, []);
 
     return (
-        <div class="login-container">
+        <div className="login-container">
             <h1>Sign Up</h1>
             <form action="#" method="post">
 

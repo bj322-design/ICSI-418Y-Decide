@@ -34,7 +34,7 @@ const HostSignup = () => {
 
                 <div className="input-group">
                     <label htmlFor="User ID">User ID:</label>
-                    <input type="text" id="User ID" name="User ID" required value={username} onChange={(e) =>
+                    <input type="text" id="UserID" name="User ID" required value={username} onChange={(e) =>
                         setUsername(e.target.value)}></input>
                 </div>
 
@@ -59,12 +59,12 @@ const HostSignup = () => {
 
                 <div className="input-group">
                     <label htmlFor="Org Name">Organization Name:</label>
-                    <input type="text" id="Org Name" name="Org Name" required value={org_name} onChange={(e) =>
+                    <input type="text" id="Org_Name" name="Org Name" required value={org_name} onChange={(e) =>
                         setOrgName(e.target.value)}></input>
                 </div>
 
 
-                <button type="button" onClick={(event) => handleSignUp(event, username, password, email, phone, org_name)}>Register
+                <button type="button" name="submitBut" id="submitBut" onClick={(event) => handleSignUp(event, username, password, email, phone, org_name)}>Register
                 </button>
 
             </form>

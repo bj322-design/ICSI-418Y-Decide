@@ -12,6 +12,8 @@ import SocialPlanner from "./SocialPlanner";
 import HostSignup from "./HostRegistration";
 import AdminSignup from "./AdminSignup";
 import AdminHome from "./AdminHome";
+import Profile from "./Profile";
+import UserSettings from "./UserSettings";
 
 function App() {
   return (
@@ -23,9 +25,9 @@ function App() {
           <Route path="/Signup" element={<Signup />}></Route>
           <Route path="/Home" element={<Home />}></Route>
           <Route path="/Events" element={<MyEvents />}></Route>
-          {/*<Route path="/Profile" element={<Profile />}></Route>
-          <Route path="/Settings" element={<Settings />}></Route>
-          <Route path="/Chat" element={<Chat />}></Route>*/}
+          <Route path="/Profile" element={<Profile />}></Route>
+          <Route path="/UserSettings" element={<UserSettings />}></Route>
+          {/*<Route path="/Chat" element={<Chat />}></Route>*/}
           <Route path="/HostHome" element={<HostHome />}></Route>
           <Route path="/CreateEvent" element={<CreateEvent />}></Route>
           <Route path="/ViewEvents" element={<ViewEvents />}></Route>

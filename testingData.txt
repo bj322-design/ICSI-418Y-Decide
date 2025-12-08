@@ -1,6 +1,20 @@
 Normal_User
-test        #First Name
-test        #Last Name
-00000       #User ID
+test        #First_Name
+test        #Last_Name
+00000       #User_ID
 test        #Password
+;
+Host_User
+test_Host1   #User_ID
+pass1        #Password
+test@testmail.com   #Email
+505-867-5309    #Phone
+NameTest1    #Organization_Name
+;
+Admin
+test        #First_Name
+admin       #Last_Name
+admin       #User_ID
+pass        #Password
+admin_key   #AdminKey
 ;

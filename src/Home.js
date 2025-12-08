@@ -2,18 +2,29 @@ import React, { useState, useEffect } from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import axios from 'axios'
 
+const SWIPE_INDEX_KEY = 'currentEventIndex';
 
 const Home = () => {
     const navigate = useNavigate();
     const [events, setEvents] = useState([]);
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const [currentIndex, setCurrentIndex] = useState(() => {
+        const storedIndex = localStorage.getItem(SWIPE_INDEX_KEY);
+        // Ensure the stored value is a non-negative number before parsing
+        return storedIndex && !isNaN(parseInt(storedIndex)) && parseInt(storedIndex) >= 0
+            ? parseInt(storedIndex)
+            : 0;
+    });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+
+
+
     const currentUserId = localStorage.getItem('userId');
 
+    // Effect 1: Fetch data only on mount
     useEffect(() => {
-        document.title = 'Home'; 
+        document.title = 'Home';
         axios.get('http://localhost:9000/getEvents')
             .then((res) => {
                 setEvents(res.data);
@@ -25,6 +36,11 @@ const Home = () => {
                 setLoading(false);
             });
     }, []);
+
+    // Effect 2: Save index whenever it changes
+    useEffect(() => {
+        localStorage.setItem(SWIPE_INDEX_KEY, currentIndex.toString());
+    }, [currentIndex]);
 
     const formatDate = (isoString) => {
         if (!isoString) return 'TBD';
@@ -48,16 +64,28 @@ const Home = () => {
                 eventId: currentEvent._id,
                 eventName: currentEvent.name
             }).then((res) => {
-                console.log("Group created: ", res.data);
-                navigate('/events');
+                const responseData = res.data;
+                console.log("Like Event Response: ", responseData);
+
+                // Check the flag returned from the server:
+                // Only navigate if a new group was actually created (alreadyInGroup is false)
+                if (!responseData.alreadyInGroup) {
+                    navigate('/Events'); // Navigate to /Events ONLY if a new group was created
+                } else {
+                    console.log("User is already in a group. Remaining on /Home screen.");
+                    // The user remains on the /Home screen and continues to the next card.
+                }
             }).catch((err) => console.error("Error joining event: ", err));
-        } else {
-            moveToNextCard();
         }
+        moveToNextCard(); // Always move to the next card.
+
     }
 
     const moveToNextCard = () => {
-        setCurrentIndex((prev) => (prev + 1) < events.length ? prev + 1 : 0);
+        // Using modulo for cleaner, circular array looping
+        if (events.length > 0) {
+            setCurrentIndex((prev) => (prev + 1) % events.length);
+        }
     };
 
     const currentEvent = events.length > 0 ? events[currentIndex] : null;
@@ -119,7 +147,7 @@ const Home = () => {
                     <button onClick={() => handleAction('pass')} className="action-button pass" disabled={!currentEvent}>
                         ✕
                     </button>
-                    <button onClick={() => handleAction('join')} className="action-button join" disabled={!currentEvent}>
+                    <button onClick={() => handleAction('join')} className="action-button join" id="acceptInvite" disabled={!currentEvent}>
                         ♥
                     </button>
                 </div>
@@ -128,10 +156,10 @@ const Home = () => {
 
                 {/* Navigation Buttons */}
                 <div className="nav-dock">
-                    <Link to="/SocialPlanner" className="dock-link">Plan</Link>
+                    <Link to="/SocialPlanner" className="dock-link">Plan Chat</Link>
                     <Link to="/Events" className="dock-link">My Events</Link>
                     <Link to="/Profile" className="dock-link">Profile</Link>
-                    <Link to="/Settings" className="dock-link">Settings</Link>
+                    <Link to="/UserSettings" className="dock-link">Settings</Link>
                 </div>
             </div>
 

@@ -36,7 +36,7 @@ const AdminSignup = () => {
                     <label htmlFor="First Name">First Name</label>
                     <input
                         type="text"
-                        id="First Name"
+                        id="First_Name"
                         name="First Name"
                         required
                         value={f_name}
@@ -48,7 +48,7 @@ const AdminSignup = () => {
                     <label htmlFor="Last Name">Last Name</label>
                     <input
                         type="text"
-                        id="Last Name"
+                        id="Last_Name"
                         name="Last Name"
                         required
                         value={l_name}
@@ -60,7 +60,7 @@ const AdminSignup = () => {
                     <label htmlFor="User ID">User ID</label>
                     <input
                         type="text"
-                        id="User ID"
+                        id="User_ID"
                         name="User ID"
                         required
                         value={username}
@@ -92,7 +92,7 @@ const AdminSignup = () => {
                     />
                 </div>
 
-                <button type="button" onClick={handleAdminSignUp}>Sign Up as Admin</button>
+                <button type="button" id="submit" onClick={handleAdminSignUp}>Sign Up as Admin</button>
 
             </form>
 
