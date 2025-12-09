@@ -13,8 +13,16 @@ const AdminHome = () => {
                         Manage Users
                     </Link>
 
+                    <Link to="/ManageHosts" className="nav-button admin-hosts">
+                        Manage Hosts
+                    </Link>
+
                     <Link to="/ManageEvents" className="nav-button admin-events">
                         Manage Events
+                    </Link>
+
+                    <Link to="/SettleDispute" className="nav-button admin-dispute">
+                        Settle Disputes
                     </Link>
 
                     <Link to="/" className="nav-button logout">
@@ -81,14 +89,28 @@ const AdminHome = () => {
                     box-shadow: 0 4px 6px rgba(111, 66, 193, 0.2);
                 }
                 
+                .nav-button.admin-hosts {
+                    background-color: #0d6efd; 
+                    box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2);
+                }
+                
                 .nav-button.admin-events {
                     background-color: #20c997;
                     box-shadow: 0 4px 6px rgba(32, 201, 151, 0.2);
                 }
                 
+                .nav-button.admin-dispute {
+                    background-color: #fd7e14; /* Orange color */
+                    box-shadow: 0 4px 6px rgba(253, 126, 20, 0.2);
+                }
+                
                 .nav-button.logout {
                     background-color: #6c757d; 
                     box-shadow: 0 4px 6px rgba(108, 117, 125, 0.2);
+                    padding: 0.5rem 1rem; 
+                    font-size: 0.9rem;    
+                    width: 50%;          
+                    align-self: center; 
                 }
 
                 .nav-button:hover {
@@ -99,11 +121,17 @@ const AdminHome = () => {
                 .nav-button.admin-users:hover {
                     background-color: #59359a;
                 }
+                .nav-button.admin-hosts:hover {
+                    background-color: #0b5ed7;
+                }
                 .nav-button.admin-events:hover {
                     background-color: #1aa179;
                 }
+                .nav-button.admin-dispute:hover {
+                    background-color: #d96b11;
+                }
                 .nav-button.logout:hover {
-                    background-color: #5a6268;
+                    background-color: #5a6268;  
                 }
             `}</style>
         </div>

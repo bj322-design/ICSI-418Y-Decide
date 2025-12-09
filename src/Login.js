@@ -9,7 +9,7 @@ const Login = () => {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const [error] = useState('');
 
     const handleLogin = async (event) => {
         if (event) event.preventDefault();
@@ -114,6 +114,11 @@ const Login = () => {
                 <div className="hostreg-link">
                     Looking to host an event? <Link to="/HostSignup">Register</Link>
                 </div>
+
+                <div className="admin-link">
+                      <Link to="/AdminSignup">Admin Access</Link>
+                </div>
+
             </div>
     
     
@@ -236,6 +241,26 @@ const Login = () => {
                 .hostreg-link a:hover {
                     text-decoration: underline;
                 }
+
+                .admin-link {
+                 margin-top: 1.5rem;
+                   font-size: 0.8rem;
+                   border-top: 1px solid #eee;
+                  padding-top: 1rem;
+                }
+
+                .admin-link a {
+                 color: #6c757d; /* Grey color to make it less prominent */
+                 text-decoration: none;
+                 font-weight: 600;
+                 transition: color 0.3s ease;
+                }
+
+                .admin-link a:hover {
+                   color: #343a40; /* Darker grey on hover */
+                    text-decoration: underline;
+                }
+
             `}</style>
         </div>
     );

@@ -1,12 +1,24 @@
 import React from 'react';
 import {useEffect} from "react"
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const HostHome = () => {
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         document.title = 'Host Home';
     }, []);
+
+    // 3. Create the Logout Handler
+    const handleLogout = () => {
+        // Clear auth data (Adjust "authToken" to whatever key you use)
+        localStorage.removeItem('authToken'); 
+        sessionStorage.clear();
+        
+        // Redirect the user to the Login page
+        navigate('/Login'); 
+    };
 
     return (
         <div className="page-wrapper">
@@ -21,6 +33,12 @@ const HostHome = () => {
                     <Link to="/ViewEvents" className="nav-button view">
                         View Your Events
                     </Link>
+
+                    {/* 4. Add the Log Off Button */}
+                    <button onClick={handleLogout} className="nav-button logout">
+                        Log Off
+                    </button>
+                    
                 </div>
             </div>
 
@@ -90,6 +108,17 @@ const HostHome = () => {
                     box-shadow: 0 4px 6px rgba(40, 167, 69, 0.2);
                 }
                 
+                /* 5. Add Styles for Logout Button */
+                .nav-button.logout {
+                    background-color: #dc3545; /* Red color for logout */
+                    box-shadow: 0 4px 6px rgba(220, 53, 69, 0.2);
+                    margin-top: 1rem; /* Add a little separation */
+                    padding: 0.5rem 1rem;
+                    font-size: 0.9rem;    
+                    width: 50%;          
+                    align-self: center;
+                }
+
                 .nav-button.teams {
                     background-color: #ffc107;
                     color: #333; /* Darker text for yellow background */
@@ -110,6 +139,10 @@ const HostHome = () => {
                 .nav-button.teams:hover {
                     background-color: #e0a800;
                 }
+                .nav-button.logout:hover { 
+                background-color: #c82333;
+                }
+
             `}</style>
         </div>
     );

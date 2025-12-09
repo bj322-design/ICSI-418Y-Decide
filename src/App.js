@@ -12,6 +12,10 @@ import SocialPlanner from "./SocialPlanner";
 import HostSignup from "./HostRegistration";
 import AdminSignup from "./AdminSignup";
 import AdminHome from "./AdminHome";
+import ManageUsers from './ManageUsers';
+import ManageHosts from './ManageHosts';
+import ManageEvents from './ManageEvents';
+import SettleDisputes from './SettleDisputes'; 
 import Profile from "./Profile";
 import UserSettings from "./UserSettings";
 
@@ -36,6 +40,10 @@ function App() {
           <Route path="/HostSignup" element={<HostSignup />}></Route>
           <Route path="/AdminSignup" element={<AdminSignup />}></Route>
           <Route path="/AdminHome" element={<AdminHome  />}></Route>
+          <Route path="/ManageUsers" element={<ManageUsers />} />
+          <Route path="/ManageHosts" element={<ManageHosts />} />
+          <Route path="/ManageEvents" element={<ManageEvents />} />
+          <Route path="/SettleDispute" element={<SettleDisputes />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
