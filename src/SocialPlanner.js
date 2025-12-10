@@ -6,7 +6,7 @@ const SocialPlanner = () => {
     // Inputs
     const [location, setLocation] = useState('');
     const [activityType, setActivityType] = useState('');
-    const [joinCode, setJoinCode] = useState(''); // NEW: State for joining
+    const [joinCode, setJoinCode] = useState(''); 
     const [loading, setLoading] = useState(false);
     
     // Session Data
@@ -19,8 +19,8 @@ const SocialPlanner = () => {
     const [chatLog, setChatLog] = useState([]);
     const [chatMessage, setChatMessage] = useState("");
 
-    const hostId = "social_planner_user_1"; 
-    const hostName = "Host (You)"; // In a real app, get this from Login
+    const hostId = localStorage.getItem('userId'); 
+    const hostName = localStorage.getItem('firstName') || "User"; 
 
     // --- POLLING EFFECT ---
     useEffect(() => {
@@ -59,7 +59,7 @@ const SocialPlanner = () => {
         });
     };
 
-    // --- NEW HANDLER: JOIN SESSION ---
+    // --- HANDLER: JOIN SESSION ---
     const handleJoinSession = (e) => {
         e.preventDefault();
         setLoading(true);
@@ -84,6 +84,8 @@ const SocialPlanner = () => {
     const handleSendMessage = (e) => {
         e.preventDefault();
         if(!chatMessage.trim()) return;
+        
+        // Send message using the REAL hostName
         axios.post('http://localhost:9000/sendMessage', {
             session_code: createdSession.session_code,
             sender: hostName, 
@@ -122,7 +124,7 @@ const SocialPlanner = () => {
                         
                         <div className="divider-text">OR</div>
 
-                        {/* NEW JOIN FORM */}
+                        {/* JOIN FORM */}
                         <form onSubmit={handleJoinSession} className="join-form">
                             <div className="input-group">
                                 <input 
@@ -151,7 +153,6 @@ const SocialPlanner = () => {
                         
                         <div className="stats-row">
                             <span>👥 {headcount} Joined</span>
-                            {/* Only show event count if we have it (creators do, joiners might not initially) */}
                             {eventCount > 0 && <span>🎉 {eventCount} Options</span>}
                         </div>
 
@@ -159,6 +160,7 @@ const SocialPlanner = () => {
                             <div className="chat-window">
                                 {chatLog.length === 0 ? <p className="empty-chat">Start the discussion...</p> : 
                                     chatLog.map((msg, i) => (
+                                        // 👇 Logic: If the sender name matches MY name, it's blue. If not, it's gray.
                                         <div key={i} className={`chat-bubble ${msg.sender === hostName ? 'mine' : 'theirs'}`}>
                                             <strong>{msg.sender}: </strong> {msg.message}
                                         </div>
