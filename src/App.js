@@ -18,6 +18,7 @@ import ManageEvents from './ManageEvents';
 import SettleDisputes from './SettleDisputes'; 
 import Profile from "./Profile";
 import UserSettings from "./UserSettings";
+import AdminSettings from "./AdminSettings";
 
 function App() {
   return (
@@ -44,6 +45,8 @@ function App() {
           <Route path="/ManageHosts" element={<ManageHosts />} />
           <Route path="/ManageEvents" element={<ManageEvents />} />
           <Route path="/SettleDispute" element={<SettleDisputes />} />
+          <Route path="/AdminSettings" element={<AdminSettings />}></Route>
+          
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

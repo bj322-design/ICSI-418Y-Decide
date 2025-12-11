@@ -1,9 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import {React, useState} from "react";
+import { React, useState } from "react";
 import axios from 'axios'
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import {useEffect} from "react"
+import { useEffect } from "react"
 
 const Login = () => {
     const navigate = useNavigate();
@@ -19,7 +19,7 @@ const Login = () => {
                 params: { username, password }
             });
 
-            if(res.data) {
+            if (res.data) {
                 localStorage.setItem('userId', res.data._id);
                 localStorage.setItem('firstName', res.data.f_name);
                 console.log("Login Success! User ID Stored: ", res.data._id);
@@ -28,9 +28,8 @@ const Login = () => {
             }
         }
 
-        catch(err)
-        {
-            if(err.response && err.response.status === 404) {
+        catch (err) {
+            if (err.response && err.response.status === 404) {
                 try {
                     const hostRes = await axios.get('http://localhost:9000/getHost', {
                         params: { username, password }
@@ -41,15 +40,16 @@ const Login = () => {
                     }
                 }
 
-                catch(hostErr) {
+                catch (hostErr) {
                     if (hostErr.response && hostErr.response.status === 404) {
                         try {
                             const adminRes = await axios.get('http://localhost:9000/getAdmin', {
-                                params: {username, password}
+                                params: { username, password }
                             });
 
                             if (adminRes.data) {
-                                localStorage.setItem('adminId', adminRes.data._id);
+                                localStorage.setItem('userId', adminRes.data._id);
+                                localStorage.setItem('username', adminRes.data.username);
                                 console.log("Admin Login Success!");
                                 navigate('/AdminHome'); // Redirect to Admin Dashboard
                                 return;
@@ -67,16 +67,15 @@ const Login = () => {
                 }
             }
 
-            else
-            {
+            else {
                 alert('Error in Login');
             }
         }
     };
 
     useEffect(() => {
-            document.title = 'Login'; 
-        }, []);
+        document.title = 'Login';
+    }, []);
 
     return (
         <div className="page-wrapper">
@@ -116,12 +115,12 @@ const Login = () => {
                 </div>
 
                 <div className="admin-link">
-                      <Link to="/AdminSignup">Admin Access</Link>
+                    <Link to="/AdminSignup">Admin Access</Link>
                 </div>
 
             </div>
-    
-    
+
+
             <style>{`
                 /* A modern, clean stylesheet for the login form */
                 body {

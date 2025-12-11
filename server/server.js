@@ -283,6 +283,26 @@ app.get('/getHost', async (req, res) => {
     }
 });
 
+app.get('/getHosts', async (req, res) => {
+    try {
+        // Fetch all hosts, selecting only the fields needed for the table
+        const hostList = await Host.find({}, { 
+            _id: 1, 
+            username: 1, 
+            email: 1, 
+            phone: 1, 
+            org_name: 1 
+        });
+        
+        console.log(`SERVER: Retrieved ${hostList.length} hosts.`);
+        res.send(hostList);
+    }
+    catch (error) {
+        console.error("SERVER ERROR in getHosts:", error);
+        res.status(500).send(error);
+    }
+});
+
 //USERS ________________________________________________________________________________________________
 app.post('/createUser', async (req, res) => {
     console.log(`SERVER: CREATE USER REQ BODY: ${req.body.username} ${req.body.f_name} ${req.body.l_name}`)
@@ -736,6 +756,85 @@ app.get('/getAdmin', async (req, res) => {
         }
     } catch (err) {
         res.status(500).json(err);
+    }
+});
+
+app.get('/getAdminDetailsById', async (req, res) => {
+    const adminId = req.query.userId; // Renamed to userId for consistency with frontend
+    try {
+        const admin = await Admin.findById(adminId).select('username f_name l_name'); // Select fields
+
+        if (admin) {
+            res.send(admin);
+        } else {
+            res.status(404).send({ message: "Admin not found" });
+        }
+    }
+    catch (error) {
+        console.error("SERVER ERROR in getAdminDetailsById:", error);
+        res.status(500).send({ message: "Internal server error" });
+    }
+});
+
+app.post('/updateAdminProfile', async (req, res) => {
+    const { userId, username, password, f_name, l_name } = req.body; 
+
+    if (!userId) {
+        return res.status(400).send({ message: "Admin ID is required for update." });
+    }
+
+    try {
+        const updateData = {};
+        const admin = await Admin.findById(userId);
+        if (!admin) {
+            return res.status(404).send({ message: "Admin not found." });
+        }
+
+        // 1. Check/Update First Name and Last Name
+        if (f_name) updateData.f_name = f_name;
+        if (l_name) updateData.l_name = l_name;
+
+        // 2. Check/Update Username
+        if (username && username !== admin.username) {
+            // Check if the new username is already taken by another admin
+            const existingAdmin = await Admin.findOne({ username });
+            if (existingAdmin) {
+                return res.status(409).send({ message: "Username already taken." });
+            }
+            updateData.username = username;
+        }
+
+        // 3. Update Password (Only if provided)
+        if (password) {
+            // NOTE: In a real app, you should hash this password before saving!
+            updateData.password = password;
+        }
+
+        if (Object.keys(updateData).length === 0) {
+            return res.status(200).send({ message: "No changes submitted." });
+        }
+
+        // 4. Perform the update
+        const updatedAdmin = await Admin.findByIdAndUpdate(
+            userId, 
+            { $set: updateData }, 
+            { new: true, select: '-password' } // new: true returns the updated document
+        );
+
+        // Return only essential, non-sensitive data
+        res.send({
+            message: "Admin profile updated successfully.",
+            updatedUser: {
+                _id: updatedAdmin._id,
+                username: updatedAdmin.username,
+                f_name: updatedAdmin.f_name,
+                l_name: updatedAdmin.l_name,
+            }
+        });
+
+    } catch (error) {
+        console.error("SERVER ERROR in updateAdminProfile:", error);
+        res.status(500).send({ message: "Internal server error during update." });
     }
 });
 
